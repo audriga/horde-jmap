@@ -1,0 +1,19 @@
+{
+    "name": "audriga/jmap-horde",
+    "description": "A package, providing JMAP support for Horde via OpenXPort",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Stanimir Bozhilov",
+            "email": "stanimir@audriga.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "jeroendesloovere/vcard": "dev-2.0.0-dev",
+        "audriga/jmap-openxport": "0.0.1"
+    },
+    "autoload": {
+    	"classmap": ["src/"]
+    }
+}
