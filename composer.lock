@@ -4,19 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a99267c799b208c1ede9b6e3cd47882f",
+    "content-hash": "9283fe1d98904c7864a33af43f6e2b4e",
     "packages": [
         {
             "name": "audriga/jmap-openxport",
-            "version": "1.2.1",
-            "dist": {
-                "type": "zip",
-                "url": "/tmp/openxport_archives/jmap-openxport-1.2.1.zip",
-                "shasum": "c1cb20db404f77293f1732501931cf930eb9a570"
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "/home/jrsr/repos/jmap/jmap-php-openxport/",
+                "reference": "cdff9dbff391110d9fa86f39e4a91ae0d79e4db5"
             },
             "require": {
                 "php": ">=5.6",
-                "psr/log": "<2"
+                "psr/log": ">=1"
             },
             "require-dev": {
                 "phpunit/phpunit": ">=9",
@@ -56,15 +56,16 @@
                 "groupware",
                 "jmap",
                 "migration"
-            ]
+            ],
+            "time": "2022-04-07T15:00:34+00:00"
         },
         {
             "name": "audriga/vcard",
             "version": "2.0.0",
-            "dist": {
-                "type": "zip",
-                "url": "/tmp/openxport_archives/tmp/jmap/vcard/build/archives/vcard-2.0.0.zip",
-                "shasum": "fd86a5a32d7ddaa12dfc7323b2142c404f4f8832"
+            "source": {
+                "type": "git",
+                "url": "/home/jrsr/repos/jmap/vcard-php/",
+                "reference": "cdad7a1c9163c9cdc6b7bc2d5accb65cfd6777d5"
             },
             "require": {
                 "behat/transliterator": "~1.0",
@@ -111,7 +112,8 @@
                 "generator",
                 "php",
                 "vcard"
-            ]
+            ],
+            "time": "2022-04-07T09:56:00+00:00"
         },
         {
             "name": "behat/transliterator",
@@ -164,30 +166,30 @@
         },
         {
             "name": "psr/log",
-            "version": "1.1.4",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/fe5ea303b0887d5caefd3d431c3e61ad47037001",
+                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=8.0.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "3.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Psr\\Log\\": "Psr/Log/"
+                    "Psr\\Log\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -208,9 +210,9 @@
                 "psr-3"
             ],
             "support": {
-                "source": "https://github.com/php-fig/log/tree/1.1.4"
+                "source": "https://github.com/php-fig/log/tree/3.0.0"
             },
-            "time": "2021-05-03T11:20:27+00:00"
+            "time": "2021-07-14T16:46:02+00:00"
         }
     ],
     "packages-dev": [
