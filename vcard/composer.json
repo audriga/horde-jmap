@@ -1,0 +1,38 @@
+{
+    "name": "audriga/vcard",
+    "type": "library",
+    "description": "This VCard PHP class can generate a vCard with some data. When using an iOS device it will export as a .ics file because iOS devices don't support the default .vcf files.",
+    "keywords": ["vcard", "generator", ".vcf", "php"],
+    "homepage": "https://github.com/jeroendesloovere/vcard",
+    "license": "MIT",
+    "version": "2.0.0",
+    "authors": [
+        {
+            "name": "Hans-Jörg Happel",
+            "email": "happel@audriga.com",
+            "homepage": "https://www.audriga.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Jeroen Desloovere",
+            "email": "info@jeroendesloovere.be",
+            "homepage": "http://jeroendesloovere.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "behat/transliterator": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.6.*"
+    },
+    "autoload": {
+        "psr-4": { "JeroenDesloovere\\VCard\\": "src/" }
+    },
+    "archive": {
+        "name": "vcard",
+        "exclude": ["/tests", "/build", "/README.md"]
+    }
+
+}

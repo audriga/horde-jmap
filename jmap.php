@@ -1,75 +1,61 @@
 <?php
 
-// OpenXPort: Use composer autoload
+// Use composer autoload
 require_once('vendor/autoload.php');
 
-require_once __DIR__ . '/../lib/core.php';
-$registry = new Horde_Registry();
+// Decode JSON post body here in case the debug capability is included
+$jmapRequest = OpenXPort\Util\HttpUtil::getRequestBody();
 
-$is_auth = $registry->isAuthenticated();
-$vars = $injector->getInstance('Horde_Variables');
-
-/* Get an Auth object. */
-$auth = $injector->getInstance('Horde_Core_Factory_Auth')->create(($is_auth && $vars->app) ? $vars->app : null);
-
-// OpenXPort: Get user login credentials from POST
-$user = $_SERVER['PHP_AUTH_USER'];
-$pass = $_SERVER['PHP_AUTH_PW'];
-$users = [];
-
-$auth_params = array(
-    'password' => $pass
-);
-
-// Handle admin auth if any
-// If user contains * explode it
-if (mb_strpos($user, '*')) {
-    $users = explode("*", $user);
-
-    // Use first part for login
-    $user = $users[0];
-}
-
-// OpenXPort: Try to authenticate
-$isAuthSuccessful = $auth->authenticate($user, $auth_params);
-if (!$isAuthSuccessful) {
-    http_response_code(401);
-    die("401 Unauthorized");
-}
-
-// TODO Add
-// Admin auth: If admin authed successfully, use second part for SQMail
-$registry->setAuth($user, array());
+// Include the common code shared between download.php and jmap.php
+require_once('common.php');
 
 $accessors = array(
-    "Contacts" => new \OpenXPort\DataAccess\HordeContactDataAccess(),
-    "Calendars" => new \OpenXPort\DataAccess\HordeCalendarEventDataAccess(),
-    "Tasks" => new \OpenXPort\DataAccess\HordeTaskDataAccess(),
-    "Notes" => null,
-    "Settings" => null,
+    "AddressBooks" => new OpenXPort\DataAccess\HordeAddressBookDataAccess(),
+    "Contacts" => new OpenXPort\DataAccess\HordeContactDataAccess(),
+    "ContactGroups" => new OpenXPort\DataAccess\HordeContactGroupDataAccess(),
+    "Calendars" => new OpenXPort\DataAccess\HordeCalendarDataAccess(),
+    "CalendarEvents" => new OpenXPort\DataAccess\HordeCalendarEventDataAccess(),
+    "TaskLists" => new OpenXPort\DataAccess\HordeTaskListDataAccess(),
+    "Tasks" => new OpenXPort\DataAccess\HordeTaskDataAccess(),
+    "Notes" => new OpenXPort\DataAccess\HordeNoteDataAccess(),
+    "Notebooks" => new OpenXPort\DataAccess\HordeNotebookDataAccess(),
+    "Identities" => new OpenXPort\DataAccess\HordeIdentityDataAccess(),
     "Filters" => null,
-    "Files" => null
+    "StorageNodes" => null,
+    "SieveScripts" => new OpenXPort\DataAccess\HordeSieveScriptDataAccess()
 );
 
 $adapters = array(
-    "Contacts" => new HordeContactAdapter(),
-    "Calendars" => new HordeCalendarEventAdapter(),
-    "Tasks" => new \OpenXPort\Adapter\HordeTaskAdapter(),
-    "Notes" => null,
-    "Settings" => null,
+    "AddressBooks" => new OpenXPort\Adapter\HordeAddressBookAdapter(),
+    "Contacts" => new OpenXPort\Adapter\HordeContactAdapter(),
+    "ContactGroups" => new OpenXPort\Adapter\HordeContactGroupAdapter(),
+    "Calendars" => new OpenXPort\Adapter\HordeCalendarAdapter(),
+    "CalendarEvents" => new OpenXPort\Adapter\HordeCalendarEventAdapter(),
+    "TaskLists" => new OpenXPort\Adapter\HordeTaskListAdapter(),
+    "Tasks" => new OpenXPort\Adapter\HordeTaskAdapter(),
+    "Notes" => new OpenXPort\Adapter\HordeNoteAdapter(),
+    "Notebooks" => new OpenXPort\Adapter\HordeNotebookAdapter(),
+    "Identities" => new OpenXPort\Adapter\HordeIdentityAdapter(),
     "Filters" => null,
-    "Files" => null
+    "StorageNodes" => null,
+    "SieveScripts" => new OpenXPort\Adapter\HordeSieveScriptAdapter()
 );
 
 $mappers = array(
-    "Contacts" => new \OpenXPort\Mapper\HordeContactMapper(),
-    "Calendars" => new HordeCalendarEventMapper(),
-    "Tasks" => new \OpenXPort\Mapper\HordeTaskMapper(),
-    "Notes" => null,
-    "Settings" => null,
+    "AddressBooks" => new OpenXPort\Mapper\HordeAddressBookMapper(),
+    "Contacts" => new OpenXPort\Mapper\HordeContactMapper(),
+    "ContactGroups" => new OpenXPort\Mapper\HordeContactGroupMapper(),
+    "Calendars" => new OpenXPort\Mapper\HordeCalendarMapper(),
+    "CalendarEvents" => new OpenXPort\Mapper\HordeCalendarEventMapper(),
+    "TaskLists" => new OpenXPort\Mapper\HordeTaskListMapper(),
+    "Tasks" => new OpenXPort\Mapper\HordeTaskMapper(),
+    "Notes" => new OpenXPort\Mapper\HordeNoteMapper(),
+    "Notebooks" => new OpenXPort\Mapper\HordeNotebookMapper(),
+    "Identities" => new OpenXPort\Mapper\HordeIdentityMapper(),
     "Filters" => null,
-    "Files" => null
+    "StorageNodes" => null,
+    "SieveScripts" => new OpenXPort\Mapper\HordeSieveScriptMapper()
 );
 
-$server = new \Jmap\Core\Server($accessors, $adapters, $mappers);
-$server->listen();
+$server = new OpenXPort\Jmap\Core\Server($accessors, $adapters, $mappers, $oxpConfig);
+$server->handleJmapRequest($jmapRequest);

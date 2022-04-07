@@ -2,24 +2,27 @@
 
 namespace OpenXPort\Util;
 
-use Jmap\Calendar\NDay;
+use OpenXPort\Jmap\Calendar\NDay;
 
-class HordeCalendarEventAdapterUtil {
-    
+class HordeCalendarEventAdapterUtil
+{
+    protected static $logger;
+
     // Below functions are for iCal -> JMAP value conversion
 
-    public static function convertFromICalFreqToJmapFrequency($freq) {
+    public static function convertFromICalFreqToJmapFrequency($freq)
+    {
         if (is_null($freq)) {
-            return NULL;
+            return null;
         }
-        
-        $jmapFrequency = NULL;
+
+        $jmapFrequency = null;
 
         switch ($freq) {
             case 'YEARLY':
                 $jmapFrequency = 'yearly';
                 break;
-            
+
             case 'MONTHLY':
                 $jmapFrequency = 'monthly';
                 break;
@@ -43,16 +46,17 @@ class HordeCalendarEventAdapterUtil {
             case 'SECONDLY':
                 $jmapFrequency = 'secondly';
                 break;
-            
+
             default:
-                $jmapFrequency = NULL;
+                $jmapFrequency = null;
                 break;
         }
 
         return $jmapFrequency;
     }
 
-    public static function convertFromICalIntervalToJmapInterval($interval) {
+    public static function convertFromICalIntervalToJmapInterval($interval)
+    {
         if (is_null($interval)) {
             // 1 is the default JMAP value for interval, that's why set to 1 if input is NULL
             return 1;
@@ -61,21 +65,24 @@ class HordeCalendarEventAdapterUtil {
         return $interval;
     }
 
-    public static function convertFromICalRScaleToJmapRScale($rscale) {
+    public static function convertFromICalRScaleToJmapRScale($rscale)
+    {
         if (is_null($rscale)) {
-            return NULL;
+            return null;
         }
 
-        // The JMAP rscale is essentially the iCal rscale, but simply in lowercase, that's why return lowercased version of the input
+        // The JMAP rscale is essentially the iCal rscale, but simply in lowercase, that's why return lowercased
+        // version of the input
         return strtolower($rscale);
     }
 
-    public static function convertFromICalSkipToJmapSkip($skip) {
+    public static function convertFromICalSkipToJmapSkip($skip)
+    {
         if (is_null($skip)) {
-            return NULL;
+            return null;
         }
 
-        $jmapSkip = NULL;
+        $jmapSkip = null;
 
         switch ($skip) {
             case 'OMIT':
@@ -89,21 +96,22 @@ class HordeCalendarEventAdapterUtil {
             case 'FORWARD':
                 $jmapSkip = 'forward';
                 break;
-            
+
             default:
-                $jmapSkip = NULL;
+                $jmapSkip = null;
                 break;
         }
 
         return $jmapSkip;
     }
 
-    public static function convertFromICalWKSTToJmapFirstDayOfWeek($wkst) {
+    public static function convertFromICalWKSTToJmapFirstDayOfWeek($wkst)
+    {
         if (is_null($wkst)) {
-            return NULL;
+            return null;
         }
 
-        $jmapFirstDayOfWeek = NULL;
+        $jmapFirstDayOfWeek = null;
 
         switch ($wkst) {
             case 'MO':
@@ -133,18 +141,19 @@ class HordeCalendarEventAdapterUtil {
             case 'SU':
                 $jmapFirstDayOfWeek = 'su';
                 break;
-            
+
             default:
-                $jmapFirstDayOfWeek = NULL;
+                $jmapFirstDayOfWeek = null;
                 break;
         }
 
         return $jmapFirstDayOfWeek;
     }
 
-    public static function convertFromICalByDayToJmapByDay($byDay) {
+    public static function convertFromICalByDayToJmapByDay($byDay)
+    {
         if (is_null($byDay)) {
-            return NULL;
+            return null;
         }
 
         $splitByDayArray = explode(",", $byDay);
@@ -153,20 +162,32 @@ class HordeCalendarEventAdapterUtil {
 
         foreach ($splitByDayArray as $bd) {
             // Parse the BYDAY string from iCal below
-        
-            $byDayWeekDayString;
-            $byDayWeekNumberString;
+
+            $byDayWeekDayString = null;
+            $byDayWeekNumberString = null;
 
             // Check if we have numeric characters and if yes, then separate them from the non-numeric accordingly
             if (!ctype_alpha($bd)) {
                 $splitByDay = str_split($bd);
                 $i = 0;
-                while (is_numeric($splitByDay[$i])) {
+
+                if (strcmp($splitByDay[$i], "+") === 0) {
+                    self::$logger = Logger::getInstance();
+                    self::$logger->info("Encountered the character \"+\" at the beginning of the iCalendar BYDAY
+                    property during processing of RRULE");
+
+                    // Remove the "+" character from the string
+                    // Since the string here is turned into an array, we make use of array_shift()
+                    // in order to get rid of the "+" character
+                    array_shift($splitByDay);
+                }
+
+                while (is_numeric($splitByDay[$i]) || strcmp($splitByDay[$i], "-") === 0) {
                     $i++;
                 }
 
-                $byDayWeekNumberString = substr($bd, 0, $i);
-                $byDayWeekDayString = substr($bd, $i);
+                $byDayWeekNumberString = substr(implode($splitByDay), 0, $i);
+                $byDayWeekDayString = substr(implode($splitByDay), $i);
             } else {
                 $byDayWeekDayString = $bd;
             }
@@ -183,13 +204,14 @@ class HordeCalendarEventAdapterUtil {
         return $jmapByDay;
     }
 
-    public static function convertFromICalByMonthDayToJmapByMonthDay($byMonthDay) {
+    public static function convertFromICalByMonthDayToJmapByMonthDay($byMonthDay)
+    {
         if (is_null($byMonthDay)) {
-            return NULL;
+            return null;
         }
 
         $splitByMonthDay = explode(",", $byMonthDay);
-        
+
         foreach ($splitByMonthDay as $s) {
             $s = (int) $s;
         }
@@ -197,19 +219,21 @@ class HordeCalendarEventAdapterUtil {
         return $splitByMonthDay;
     }
 
-    public static function convertFromICalByMonthToJmapByMonth($byMonth) {
+    public static function convertFromICalByMonthToJmapByMonth($byMonth)
+    {
         if (is_null($byMonth)) {
-            return NULL;
+            return null;
         }
 
         $splitByMonth = explode(",", $byMonth);
-        
+
         return $splitByMonth;
     }
 
-    public static function convertFromICalByYearDayToJmapByYearDay($byYearDay) {
+    public static function convertFromICalByYearDayToJmapByYearDay($byYearDay)
+    {
         if (is_null($byYearDay)) {
-            return NULL;
+            return null;
         }
 
         $splitByYearDay = explode(",", $byYearDay);
@@ -221,9 +245,10 @@ class HordeCalendarEventAdapterUtil {
         return $splitByYearDay;
     }
 
-    public static function convertFromICalByWeekNoToJmapByWeekNo($byWeekNo) {
+    public static function convertFromICalByWeekNoToJmapByWeekNo($byWeekNo)
+    {
         if (is_null($byWeekNo)) {
-            return NULL;
+            return null;
         }
 
         $splitByWeekNo = explode(",", $byWeekNo);
@@ -235,9 +260,10 @@ class HordeCalendarEventAdapterUtil {
         return $splitByWeekNo;
     }
 
-    public static function convertFromICalByHourToJmapByHour($byHour) {
+    public static function convertFromICalByHourToJmapByHour($byHour)
+    {
         if (is_null($byHour)) {
-            return NULL;
+            return null;
         }
 
         $splitByHour = explode(",", $byHour);
@@ -249,9 +275,10 @@ class HordeCalendarEventAdapterUtil {
         return $splitByHour;
     }
 
-    public static function convertFromICalByMinuteToJmapByMinute($byMinute) {
+    public static function convertFromICalByMinuteToJmapByMinute($byMinute)
+    {
         if (is_null($byMinute)) {
-            return NULL;
+            return null;
         }
 
         $splitByMinute = explode(",", $byMinute);
@@ -263,9 +290,10 @@ class HordeCalendarEventAdapterUtil {
         return $splitByMinute;
     }
 
-    public static function convertFromICalBySecondToJmapBySecond($bySecond) {
+    public static function convertFromICalBySecondToJmapBySecond($bySecond)
+    {
         if (is_null($bySecond)) {
-            return NULL;
+            return null;
         }
 
         $splitBySecond = explode(",", $bySecond);
@@ -277,9 +305,10 @@ class HordeCalendarEventAdapterUtil {
         return $splitBySecond;
     }
 
-    public static function convertFromICalBySetPositionToJmapBySetPos($bySetPosition) {
+    public static function convertFromICalBySetPositionToJmapBySetPos($bySetPosition)
+    {
         if (is_null($bySetPosition)) {
-            return NULL;
+            return null;
         }
 
         $splitBySetPosition = explode(",", $bySetPosition);
@@ -291,17 +320,19 @@ class HordeCalendarEventAdapterUtil {
         return $splitBySetPosition;
     }
 
-    public static function convertFromICalCountToJmapCount($count) {
+    public static function convertFromICalCountToJmapCount($count)
+    {
         if (is_null($count)) {
-            return NULL;
+            return null;
         }
 
         return (int) $count;
     }
 
-    public static function convertFromICalUntilToJmapUntil($until) {
+    public static function convertFromICalUntilToJmapUntil($until)
+    {
         if (is_null($until)) {
-            return NULL;
+            return null;
         }
 
         $iCalUntilDate = \DateTime::createFromFormat("Ymd\THis\Z", $until);
@@ -310,4 +341,103 @@ class HordeCalendarEventAdapterUtil {
         return $jmapUntil;
     }
 
+    public static function convertFromICalCUTypeToJmapKind($cutype)
+    {
+        if (is_null($cutype)) {
+            return null;
+        }
+
+        $jmapKind = null;
+
+        switch ($cutype) {
+            case 'INDIVIDUAL':
+                $jmapKind = "individual";
+                break;
+
+            case 'GROUP':
+                $jmapKind = "group";
+                break;
+
+            case 'RESOURCE':
+                $jmapKind = "resource";
+                break;
+
+            case 'ROOM':
+                $jmapKind = "location";
+                break;
+
+            case 'UNKNOWN':
+                $jmapKind = null;
+                break;
+
+            default:
+                $jmapKind = strtolower($cutype);
+                break;
+        }
+
+        return $jmapKind;
+    }
+
+    public static function convertFromICalRoleToJmapRole($role)
+    {
+        if (is_null($role)) {
+            return null;
+        }
+
+        $jmapRoles = null;
+
+        switch ($role) {
+            case 'CHAIR':
+                $jmapRoles = array("attendee" => true, "chair" => true);
+                break;
+
+            case 'REQ-PARTICIPANT':
+                $jmapRoles = array("attendee" => true);
+                break;
+
+            case 'OPT-PARTICIPANT':
+                $jmapRoles = array("attendee" => true, "optional" => true);
+                break;
+
+            case 'NON-PARTICIPANT':
+                $jmapRoles = array("informational" => true);
+                break;
+
+            default:
+                $jmapRoles = array(strtolower($role) => true);
+                break;
+        }
+
+        return $jmapRoles;
+    }
+
+    /**
+     * Takes a multi-dimensional array and flattens it to a single-dimensional array
+     *
+     * @param array $array
+     * @return array|null Returns the single-dimensional array or null, if the passed parameter was empty
+     */
+    public static function flattenMultiDimensionalArray($array)
+    {
+        // If the array, passed as parameter, is either null, not set, empty or not an array, then return null
+        if (is_null($array) || !isset($array) || empty($array) || !is_array($array)) {
+            return null;
+        }
+
+        // Initialize return array
+        $returnArray = array();
+        // Initialize stack
+        $stack = array_values($array);
+        // Process stack until done
+        while ($stack) {
+            $value = array_shift($stack);
+            if (is_array($value)) { // A value to further process
+                array_unshift($stack, ...$value);
+            } else { // A value to take
+                $returnArray[] = $value;
+            }
+        }
+
+        return $returnArray;
+    }
 }

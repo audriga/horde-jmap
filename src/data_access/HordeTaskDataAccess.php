@@ -4,41 +4,47 @@ namespace OpenXPort\DataAccess;
 
 use OpenXPort\DataAccess\AbstractDataAccess;
 
-class HordeTaskDataAccess extends AbstractDataAccess {
-
-    public function getAll($accountId = null) {
+class HordeTaskDataAccess extends AbstractDataAccess
+{
+    public function getAll($accountId = null)
+    {
         // Use registry for access to internal API which provides data access
         global $registry;
 
-        $taskIds = [];
-        $tasks = [];
+        $result = [];
 
-        // Take all IDs of Tasks
-        $taskIds = $registry->call('tasks/listUids');
+        // Obtain all task list IDs that the user owns
+        $lists = $registry->call('tasks/listTasklists', array(true));
 
-        // Iterate through all IDs and export for each ID an iCal task
-        foreach ($taskIds as $id) {
-            $iCalTask = $registry->call('tasks/export', array($id, 'text/calendar'));
-            array_push($tasks, $iCalTask);
+        /**
+         * For each task list ID export all belonging tasks of the task list with this ID as iCalendar
+         * Then, put the task list UID as key in $result and the belonging iCalendar as value in $result
+         */
+        foreach (array_keys($lists) as $list) {
+            $iCalendarTasks = $registry->call('tasks/exportTasklist', array($list, 'text/calendar'));
+            $result["$list"] = $iCalendarTasks;
         }
 
-        return $tasks;
+        return $result;
     }
 
-    public function get($ids, $accountId = null) {
+    public function get($ids, $accountId = null)
+    {
         // TODO: Implement me
     }
 
-    public function create($contactsToCreate, $accountId = null) {
+    public function create($contactsToCreate, $accountId = null)
+    {
         // TODO: Implement me
     }
 
-    public function destroy($ids, $accountId = null) {
-        // TODO: Implement me
-    }
-    
-    public function query($accountId, $filter = null) {
+    public function destroy($ids, $accountId = null)
+    {
         // TODO: Implement me
     }
 
+    public function query($accountId, $filter = null)
+    {
+        // TODO: Implement me
+    }
 }
