@@ -1,0 +1,6 @@
+[submodule "icalendar"]
+	path = icalendar
+	url = git@bitbucket.org:audriga/icalendar-php.git
+[submodule "vcard"]
+	path = vcard
+	url = git@bitbucket.org:audriga/vcard-php.git

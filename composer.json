@@ -21,7 +21,6 @@
         "classmap": ["src/"]
     },
     "archive": {
-        "name": "jmap-horde",
         "exclude": ["/tests", "/build", "/README.md"]
     }
 }
