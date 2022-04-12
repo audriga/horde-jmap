@@ -123,7 +123,7 @@ ifeq (integration,$(project))
 	cp tests/integration/horde_config.php config/config.php
 else ifeq (uni_mannheim,$(project))
 	rm config/config.default.php || true
-	rm config/config.php
+	rm config/config.php || true
 else ifneq (, $(project))
 	cp ../projects/$(project)/horde_config.php config/config.php
 endif
