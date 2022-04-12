@@ -16,6 +16,7 @@ clean:
 .PHONY: composer
 composer:
 ifeq (, $(composer))
+	git submodule update --init --recursive
 	@echo "No composer command available, downloading a copy from the web"
 	mkdir -p $(build_tools_directory)
 	curl -sS https://getcomposer.org/installer | php
@@ -28,6 +29,7 @@ endif
 .PHONY: composer_lts
 composer_lts:
 ifeq (, $(composer_lts))
+	git submodule update --init --recursive
 	@echo "No composer LTS command available, downloading a copy from the web"
 	mkdir -p $(build_tools_directory)
 	curl -sS https://getcomposer.org/installer | php -- --version 2.2.11
@@ -44,7 +46,6 @@ init: composer
 # Update dependencies and make dev tools available for development
 .PHONY: update
 update:
-	git submodule update --init --recursive
 	php $(build_tools_directory)/composer.phar update --prefer-dist
 
 # Switch to PHP 5.6 mode. In case you need to build for PHP 5.6
