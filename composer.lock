@@ -11,7 +11,7 @@
             "version": "1.2.1",
             "source": {
                 "type": "git",
-                "url": "/home/jrsr/repos/php/jmap-php-openxport/",
+                "url": "git@bitbucket.org:audriga/jmap-php-openxport.git",
                 "reference": "1239403a3f2213792672e4ba65fabefca264cf7f"
             },
             "require": {
@@ -64,7 +64,7 @@
             "version": "2.0.0",
             "source": {
                 "type": "git",
-                "url": "/home/jrsr/repos/php/vcard-php/",
+                "url": "git@bitbucket.org:audriga/vcard-php.git",
                 "reference": "cdad7a1c9163c9cdc6b7bc2d5accb65cfd6777d5"
             },
             "require": {

@@ -1,7 +1,7 @@
 # Horde JMAP
-The JMAP Plugin for Horde provides [JMAP](https://jmap.io/) support for Horde-based systems by exposing a RESTful API Endpoint which speaks the JMAP Protocol.
+⚠️  This version is still in its early stages. This API exposes user data. It is not recommended to expose this API to untrusted networks for now. Please consider contacting us before using this in production.
 
-Please note that this version is still in its early stages.
+The JMAP Plugin for Horde provides [JMAP](https://jmap.io/) support for Horde-based systems by exposing a RESTful API Endpoint which speaks the JMAP Protocol.
 
 The following data types are currently supported by the JMAP Plugin for Horde:
 

@@ -1,7 +1,8 @@
 {
-    "name": "audriga/jmap-horde",
+    "name": "audriga/horde-jmap",
     "description": "A package, providing JMAP support for Horde via OpenXPort",
-    "type": "project",
+    "type": "horde-application",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Stanimir Bozhilov",
